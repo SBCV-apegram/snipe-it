@@ -166,18 +166,10 @@ class _61526_B extends _61526
 
         if ($record->has('title')) {
             static::writeText(
-                $pdf,
-                $record->get('title'),
-                $pa->x1,
-                $currentY,
-                'freesans',
-                'B',
-                self::TITLE_SIZE,
-                'C',
-                $pa->w,
-                self::TITLE_SIZE,
-                true,
-                0
+                $pdf, $record->get('title'),
+                $pa->x1, $currentY,
+                'freesans', 'B', self::TITLE_SIZE, 'C',
+                $pa->w, self::TITLE_SIZE, true, 0
             );
 
             $currentY += self::TITLE_SIZE + self::TITLE_MARGIN;
@@ -186,51 +178,29 @@ class _61526_B extends _61526
 
         if ($record->has('barcode1d')) {
             static::write1DBarcode(
-                $pdf,
-                $record->get('barcode1d')->content,
-                $record->get('barcode1d')->type,
-                $pa->x1,
-                $pa->y2 - self::BARCODE_SIZE,
-                $usableWidth,
-                self::BARCODE_SIZE
+                $pdf, $record->get('barcode1d')->content, $record->get('barcode1d')->type,
+                $pa->x1, $pa->y2 - self::BARCODE_SIZE,
+                $usableWidth, self::BARCODE_SIZE
             );
 
-            $usableHeight -= self::BARCODE_SIZE
-                + self::BARCODE_MARGIN;
+            $usableHeight -= self::BARCODE_SIZE + self::BARCODE_MARGIN;
         }
 
         foreach ($record->get('fields') as $field) {
             static::writeText(
-                $pdf,
-                strtoupper($field['label']),
-                $currentX,
-                $currentY,
-                'freesans',
-                '',
-                self::LABEL_SIZE,
-                'L',
-                $usableWidth,
-                self::LABEL_SIZE,
-                true,
-                0
+                $pdf, strtoupper($field['label']),
+                $currentX, $currentY,
+                'freesans', '', self::LABEL_SIZE, 'L',
+                $usableWidth, self::LABEL_SIZE, true, 0
             );
 
             $currentY += self::LABEL_SIZE + self::LABEL_MARGIN;
 
             static::writeText(
-                $pdf,
-                $field['value'],
-                $currentX,
-                $currentY,
-                'freemono',
-                'B',
-                self::FIELD_SIZE,
-                'L',
-                $usableWidth,
-                self::FIELD_SIZE,
-                true,
-                0,
-                0.01
+                $pdf, $field['value'],
+                $currentX, $currentY,
+                'freemono', 'B', self::FIELD_SIZE, 'L',
+                $usableWidth, self::FIELD_SIZE, true, 0, 0.01
             );
         }
     }

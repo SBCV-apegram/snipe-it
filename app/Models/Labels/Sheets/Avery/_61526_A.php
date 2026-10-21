@@ -195,18 +195,10 @@ class _61526_A extends _61526
         // Company name
         if ($record->has('title')) {
             static::writeText(
-                $pdf,
-                $record->get('title'),
-                $pa->x1,
-                $pa->y1,
-                'freesans',
-                'B',
-                self::TITLE_SIZE,
-                'C',
-                $pa->w,
-                self::TITLE_SIZE,
-                true,
-                0
+                $pdf, $record->get('title'),
+                $pa->x1, $pa->y1,
+                'freesans', 'B', self::TITLE_SIZE, 'C',
+                $pa->w, self::TITLE_SIZE, true, 0
             );
 
             $currentY += self::TITLE_SIZE + self::TITLE_MARGIN;
@@ -214,23 +206,26 @@ class _61526_A extends _61526
         }
 
         // QR / 2D barcode
-        $barcodeSize = $usableHeight;
+        $barcodeSize = $usableHeight - self::FIELD_SIZE - self::BARCODE_MARGIN;
 
         if ($record->has('barcode2d')) {
             static::write2DBarcode(
-                $pdf,
-                $record->get('barcode2d')->content,
-                $record->get('barcode2d')->type,
-                $currentX,
-                $currentY,
-                $barcodeSize,
-                $barcodeSize
+                $pdf, $record->get('barcode2d')->content, $record->get('barcode2d')->type,
+                $currentX, $currentY,
+                $barcodeSize, $barcodeSize
             );
+            
+            static::writeText(
+                $pdf, $record->get('tag'),
+                $pa->x1, $currentY + $barcodeSize + (self::BARCODE_MARGIN * 0.5),
+                'freesans', 'B', self::FIELD_SIZE, 'C',
+                $barcodeSize, self::FIELD_SIZE, true, 0
+            );
+            
 
             $currentX += $barcodeSize + self::BARCODE_MARGIN;
             $usableWidth -= $barcodeSize + self::BARCODE_MARGIN;
         }
-
         /*
          * Expected field order:
          *   0: Support number
@@ -251,40 +246,22 @@ class _61526_A extends _61526
                  * smaller SUPPORT heading with larger bold number.
                  */
                 static::writeText(
-                    $pdf,
-                    strtoupper((string) ($field['label'] ?? '')),
-                    $currentX,
-                    $currentY,
-                    'freesans',
-                    '',
-                    self::SUPPORT_LABEL_SIZE,
-                    'L',
-                    $usableWidth,
-                    self::SUPPORT_LABEL_SIZE,
-                    true,
-                    0
+                    $pdf, strtoupper((string) ($field['label'] ?? '')),
+                    $currentX, $currentY,
+                    'freesans', '', self::SUPPORT_LABEL_SIZE, 'L',
+                    $usableWidth, self::SUPPORT_LABEL_SIZE, true, 0
                 );
 
                 $currentY += self::SUPPORT_LABEL_SIZE;
 
                 static::writeText(
-                    $pdf,
-                    $value,
-                    $currentX,
-                    $currentY,
-                    'freesans',
-                    'B',
-                    self::SUPPORT_SIZE,
-                    'L',
-                    $usableWidth,
-                    self::SUPPORT_SIZE,
-                    true,
-                    0
+                    $pdf, $value,
+                    $currentX, $currentY,
+                    'freesans', 'B', self::SUPPORT_SIZE, 'L',
+                    $usableWidth, self::SUPPORT_SIZE, true, 0
                 );
 
-                $currentY +=
-                    self::SUPPORT_SIZE +
-                    self::SUPPORT_MARGIN;
+                $currentY += self::SUPPORT_SIZE + self::SUPPORT_MARGIN;
 
                 continue;
             }
@@ -294,43 +271,22 @@ class _61526_A extends _61526
              * the standard label/value treatment.
              */
             static::writeText(
-                $pdf,
-                strtoupper((string) ($field['label'] ?? '')),
-                $currentX,
-                $currentY,
-                'freesans',
-                '',
-                self::LABEL_SIZE,
-                'L',
-                $usableWidth,
-                self::LABEL_SIZE,
-                true,
-                0
+                $pdf, strtoupper((string) ($field['label'] ?? '')),
+                $currentX, $currentY,
+                'freesans', '', self::LABEL_SIZE, 'L',
+                $usableWidth, self::LABEL_SIZE, true, 0
             );
 
-            $currentY +=
-                self::LABEL_SIZE +
-                self::LABEL_MARGIN;
+            $currentY += self::LABEL_SIZE + self::LABEL_MARGIN;
 
             static::writeText(
-                $pdf,
-                $value,
-                $currentX,
-                $currentY,
-                'freemono',
-                'B',
-                self::FIELD_SIZE,
-                'L',
-                $usableWidth,
-                self::FIELD_SIZE,
-                true,
-                0,
-                0.01
+                $pdf, $value,
+                $currentX, $currentY,
+                'freemono', 'B', self::FIELD_SIZE, 'L',
+                $usableWidth, self::FIELD_SIZE, true, 0, 0.01
             );
 
-            $currentY +=
-                self::FIELD_SIZE +
-                self::FIELD_MARGIN;
+            $currentY += self::FIELD_SIZE + self::FIELD_MARGIN;
         }
     }
 }
