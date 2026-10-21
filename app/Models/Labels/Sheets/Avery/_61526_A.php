@@ -218,7 +218,7 @@ class _61526_A extends _61526
             static::writeText(
                 $pdf, $record->get('tag'),
                 $pa->x1, $currentY + $barcodeSize + (self::BARCODE_MARGIN * 0.5),
-                'freesans', 'B', self::FIELD_SIZE, 'C',
+                'freemono', 'B', self::FIELD_SIZE, 'C',
                 $barcodeSize, self::FIELD_SIZE, true, 0
             );
             
